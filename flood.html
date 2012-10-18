@@ -1,0 +1,173 @@
+<!doctype html>
+
+<html>
+
+<meta name="Copyright" content="&copy; 2012, Intel Corporation. All rights reserved." />
+<!--
+* Copyright (c) 2012, Intel Corporation. All rights reserved.
+* File revision: 04 October 2012
+* Please see http://software.intel.com/html5/license/samples 
+* and the included README.md file for license terms and conditions.
+-->
+
+<head>
+<style>
+.slowchange {
+    transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+}
+
+.cell {
+    width: 50px;
+    height: 50px;
+    float: left;
+    background: gray;
+    padding-top: 2px;
+    margin-top: -2px;
+}
+</style>
+
+<script>
+var colors = ["red", "blue", "green", "yellow", "darkred", "violet"]
+var background = ''
+var data = []
+var donelist = []
+
+function addneighbor(k)
+{
+    if (k.checked) {
+        return;
+    }
+    for (i=0; i<donelist.length; i++) {
+        k.done = true
+        if (donelist[i] == k) {
+            return;
+        }
+    }
+    donelist.push(k)
+}
+
+function checkColor(k)
+{
+    if (k.done || k.dom.color == background) {
+        k.done = true
+        k.dom.color = 'transparent'
+        k.dom.style.backgroundColor = 'transparent'
+        addneighbor(k)
+    }
+}
+
+function addneighbors(t)
+{
+    if (t.x > 0) {
+        checkColor(data[t.x-1][t.y])
+    }
+    if (t.x < data.length-1) {
+        checkColor(data[t.x+1][t.y])
+    }
+    if (t.y > 0) {
+        checkColor(data[t.x][t.y-1])
+    }
+    if (t.y < data[t.x].length-1) {
+        checkColor(data[t.x][t.y+1])
+    }
+    t.checked = true
+}
+
+
+function doColor(color)
+{
+    var f = document.getElementById('field');
+    background = color
+    donelist=[]
+    for (i=0; i<data.length; i++) {
+        for (j=0; j<data[i].length; j++) {
+            data[i][j].checked = false
+            if (data[i][j].done) {
+                donelist.push(data[i][j])
+            }
+        }
+    }
+
+    f.style.backgroundColor = color
+    f.color = color
+    while (donelist.length > 0) {
+        var t = donelist.pop()
+        addneighbors(t)
+    }
+}
+
+
+function colorCells(data)
+{
+    for (i=0; i<data.length; i++) {
+        drow = data[i]
+        for (j=0; j<drow.length; j++) {
+            var c = colors[parseInt(Math.random()*colors.length)]
+            drow[j].dom.style.backgroundColor = c
+            drow[j].dom.color = c
+            drow[j].done = false
+        }
+    }
+    var f = document.getElementById('field');
+    background = data[0][0].dom.color
+    f.style.backgroundColor = background
+    data[0][0].done = true
+    data[0][0].dom.style.backgroundColor = 'transparent'
+    data[0][0].dom.color = 'transparent'
+    doColor(background)
+}
+
+function inc_counter()
+{
+    var counter = document.getElementById('counter');
+    var cur = parseInt(counter.innerHTML)
+    counter.innerHTML = String(cur+1)
+}
+
+function clickCell()
+{
+    if (this.color != background && this.color != 'transparent') {
+        inc_counter()
+        doColor(this.color)
+    }
+}
+
+function makeCells(x, y)
+{
+    var f = document.getElementById('field');
+    data = []
+    for (i=0; i<x; i++) {
+        var row = document.createElement('tr');
+        var drow = []
+        for (j=0; j<x; j++) {
+            var square = document.createElement('td');
+            square.setAttribute('class', 'cell slowchange');
+            square.onclick = clickCell
+            row.appendChild(square);
+            drow[j] = { "dom": square, "color": '', "x": i, "y": j}
+        }
+        data[i] = drow
+        f.appendChild(row);
+    }
+    colorCells(data)
+}
+
+function clickColor()
+{
+    doColor(this.style.backgroundColor)
+}
+
+</script>
+</head>
+<body onload="makeCells(14, 14)">
+<table id=field class="slowchange">
+</table>
+
+<h1 id=counter>0</h1>
+
+</body>
+</html>
+
