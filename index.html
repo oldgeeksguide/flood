@@ -62,18 +62,14 @@ var background = '';
 var data = [];
 var donelist = [];
 
-function addNeighbor(k)
-{
+function addNeighbor(k) {
     if (k.checked) {
         return;
     }
-    for (i=0; i<donelist.length; i++) {
-        k.done = true;
-        if (donelist[i] == k) {
-            return;
-        }
+    k.done = true;
+    if (donelist.indexOf(k) < 0) {
+        donelist.push(k)
     }
-    donelist.push(k);
 }
 
 function checkColor(k)
