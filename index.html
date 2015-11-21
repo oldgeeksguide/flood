@@ -45,87 +45,84 @@ head, body {
     margin-left: 1em;
     padding-left: 1em;
     padding-right: 1em;
-    background: rgb(180,255,180);
-    border-radius: 1em;
-    border: 1px solid blue;
+    border: 1px solid black;
 }
 
 #counter {
     margin-left: 1em;
     padding-left: 0.25em;
     padding-right: 0.25em;
-    border: 1px solid blue;
 }
 
 </style>
 
 <script>
-var colors = ["red", "blue", "green", "yellow", "darkred", "violet"]
-var background = ''
-var data = []
-var donelist = []
+var colors = ["red", "blue", "green", "yellow", "darkred", "violet"];
+var background = '';
+var data = [];
+var donelist = [];
 
 function addNeighbor(k)
 {
     if (k.checked) {
-        return
+        return;
     }
     for (i=0; i<donelist.length; i++) {
-        k.done = true
+        k.done = true;
         if (donelist[i] == k) {
-            return
+            return;
         }
     }
-    donelist.push(k)
+    donelist.push(k);
 }
 
 function checkColor(k)
 {
     if (k.done || k.dom.color == background) {
-        k.done = true
-        k.dom.color = 'transparent'
-        k.dom.style.backgroundColor = 'transparent'
-        addNeighbor(k)
+        k.done = true;
+        k.dom.color = 'transparent';
+        k.dom.style.backgroundColor = 'transparent';
+        addNeighbor(k);
     }
 }
 
 function addNeighbors(t)
 {
     if (t.x > 0) {
-        checkColor(data[t.x-1][t.y])
+        checkColor(data[t.x-1][t.y]);
     }
     if (t.x < data.length-1) {
-        checkColor(data[t.x+1][t.y])
+        checkColor(data[t.x+1][t.y]);
     }
     if (t.y > 0) {
-        checkColor(data[t.x][t.y-1])
+        checkColor(data[t.x][t.y-1]);
     }
     if (t.y < data[t.x].length-1) {
-        checkColor(data[t.x][t.y+1])
+        checkColor(data[t.x][t.y+1]);
     }
-    t.checked = true
+    t.checked = true;
 }
 
 
 function doColor(color)
 {
-    var f = document.getElementById('field')
-    background = color
-    donelist=[]
+    var f = document.getElementById('field');
+    background = color;
+    donelist=[];
     for (i=0; i<data.length; i++) {
         for (j=0; j<data[i].length; j++) {
-            data[i][j].checked = false
+            data[i][j].checked = false;
             if (data[i][j].done) {
-                donelist.push(data[i][j])
+                donelist.push(data[i][j]);
             }
         }
     }
 
-    f.style.backgroundColor = color
-    f.color = color
+    f.style.backgroundColor = color;
+    f.color = color;
     while (donelist.length > 0) {
-        var t = donelist.pop()
-        addNeighbors(t)
+        var t = donelist.pop();
+        addNeighbors(t);
     }
 }
 
@@ -133,73 +130,73 @@ function doColor(color)
 function colorCells(data)
 {
     for (i=0; i<data.length; i++) {
-        drow = data[i]
+        drow = data[i];
         for (j=0; j<drow.length; j++) {
-            var c = colors[parseInt(Math.random()*colors.length)]
-            drow[j].dom.style.backgroundColor = c
-            drow[j].dom.color = c
-            drow[j].done = false
+            var c = colors[parseInt(Math.random()*colors.length)];
+            drow[j].dom.style.backgroundColor = c;
+            drow[j].dom.color = c;
+            drow[j].done = false;
         }
     }
-    var f = document.getElementById('field')
-    background = data[0][0].dom.color
-    f.style.backgroundColor = background
-    data[0][0].done = true
-    data[0][0].dom.style.backgroundColor = 'transparent'
-    data[0][0].dom.color = 'transparent'
-    doColor(background)
+    var f = document.getElementById('field');
+    background = data[0][0].dom.color;
+    f.style.backgroundColor = background;
+    data[0][0].done = true;
+    data[0][0].dom.style.backgroundColor = 'transparent';
+    data[0][0].dom.color = 'transparent';
+    doColor(background);
 }
 
 function resetCounter()
 {
-    var counter = document.getElementById('counter')
-    counter.innerHTML = "0"
+    var counter = document.getElementById('counter');
+    counter.innerHTML = "0";
 }
 
 function incCounter()
 {
-    var counter = document.getElementById('counter')
-    var cur = parseInt(counter.innerHTML)
-    counter.innerHTML = String(cur+1)
+    var counter = document.getElementById('counter');
+    var cur = parseInt(counter.innerHTML);
+    counter.innerHTML = String(cur+1);
 }
 
 function clickCell()
 {
     if (this.color != background && this.color != 'transparent') {
-        incCounter()
-        doColor(this.color)
+        incCounter();
+        doColor(this.color);
     }
 }
 
 function makeCells(x, y)
 {
-    var f = document.getElementById('field')
-    data = []
+    var f = document.getElementById('field');
+    data = [];
     for (i=0; i<x; i++) {
-        var row = document.createElement('tr')
-        var drow = []
+        var row = document.createElement('tr');
+        var drow = [];
         for (j=0; j<x; j++) {
-            var square = document.createElement('td')
-            square.setAttribute('class', 'cell slowchange')
-            square.onclick = clickCell
-            row.appendChild(square)
-            drow[j] = { "dom": square, "color": '', "x": i, "y": j}
+            var square = document.createElement('td');
+            square.setAttribute('class', 'cell slowchange');
+            square.onclick = clickCell;
+            row.appendChild(square);
+            drow[j] = { "dom": square, "color": '', "x": i, "y": j};
         }
-        data[i] = drow
-        f.appendChild(row)
+        data[i] = drow;
+        f.appendChild(row);
     }
-    colorCells(data)
+    colorCells(data);
 }
 
 function clickColor()
 {
-    doColor(this.style.backgroundColor)
+    doColor(this.style.backgroundColor);
 }
 
 function resetGame()
 {
-    colorCells(data)
-    resetCounter()
+    colorCells(data);
+    resetCounter();
 }
 
 </script>
