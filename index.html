@@ -12,6 +12,12 @@
 
 <head>
 <style>
+
+head, body {
+    width: 100%;
+    height: 100%;
+}
+
 .slowchange {
     transition: all 0.4s ease-in-out;
     -webkit-transition: all 0.4s ease-in-out;
@@ -22,12 +28,14 @@
 #field {
     border-style: none;
     border-spacing: 0px;
+    width: 80%;
+    margin: auto;
 }
 
 .cell {
-    min-width: 50px;
-    width: 50px;
-    height: 50px;
+    min-width: 7.1%; /* 14 tiles so this is 1/14 (*100 for percentage) */
+    width: 7.1%;
+    padding-bottom: 7.1%;
     border-style: none;
     border-spacing: 0px;
     background: gray;
